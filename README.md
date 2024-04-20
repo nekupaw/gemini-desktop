@@ -1,7 +1,9 @@
 # Google Gemini Desktop Client (Electron)
 I've developed a straightforward desktop client for Google Gemini (formerly Bard) using the Electron framework.
 A precompiled version for Windows is now accessible here:
-[Gemini-Desktop (Windows)](http:pawbs.de)
+
+[Gemini-Desktop (Windows Set-Up)](http:pawbs.de)
+[Gemini-Desktop (zip)](http://pawbs.de)
 
 For other systems, simply adapt and build the source code to suit your needs.
 
