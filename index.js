@@ -43,6 +43,8 @@ const createWindow = () => {
 
     win.loadURL('https://gemini.google.com/app');
 
+    Menu.setApplicationMenu(null)
+
     win.on('close', () => {
         store.set('winWidth', win.getBounds().width);
     })
@@ -93,12 +95,12 @@ function loadPreScript() {
     const loginFrame = document.getElementsByClassName('gb_Ld')[0];
     const openWithText = document.createElement('span');
     openWithText.textContent = "open Gemini with [Ctrl] + [G]";
-    openWithText.style.cssText = 'font-family: "Google Sans","Helvetica Neue",sans-serif; font-size: 15px; opacity: 0; transition: 0.2s';
+    openWithText.style.cssText = 'font-family: "Google Sans","Helvetica Neue",sans-serif; font-size: 15px; opacity: 0; transition: 0.4s';
     setTimeout(() => {openWithText.style.opacity = 0.5;}, 600);
     
     const openMicText = document.createElement('span');
     openMicText.textContent = 'activate mic with [Ctrl] + [Shift] + [G]';
-    openMicText.style.cssText = 'font-family: "Google Sans","Helvetica Neue",sans-serif; font-size: 15px; opacity: 0; transition: 0.2s';
+    openMicText.style.cssText = 'font-family: "Google Sans","Helvetica Neue",sans-serif; font-size: 15px; opacity: 0; transition: 0.4s';
     setTimeout(() => {openMicText.style.opacity = 0.5;},700);
 
     if (!loginFrame) {
