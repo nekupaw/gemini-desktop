@@ -8,6 +8,12 @@ let tray;
 let win;
 let icon = path.join(__dirname, 'icon/google-gemini-icon.png');
 
+const isAlreadyRunning = app.requestSingleInstanceLock();
+
+if (isAlreadyRunning) {
+    app.on('second-instance', app.quit);
+}
+
 const createWindow = () => {
     const display = screen.getPrimaryDisplay();
 
