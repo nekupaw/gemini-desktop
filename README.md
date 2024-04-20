@@ -12,3 +12,4 @@ Below are some screenshots showcasing its functionality:
 
 
 
+![Screenshot 2024-04-20 150816](https://github.com/nekupaw/gemini-widows/assets/128070292/ffb99e8b-ee68-4ffb-bacf-48d704773dd2)
