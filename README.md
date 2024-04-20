@@ -8,7 +8,7 @@ For other systems, simply adapt and build the source code to suit your needs.
 
 This client operates by utilizing a WebView container to access the Gemini website and implements various modifications for enhanced user experience.
 With the shortcut Windows Key + G, Gemini can be opened from anywhere.
-tip: use the installer and copy the shortcut from the desktop to the startup folder, o the next time you start your computer you don't have to worry about starting Gemini.
+tip: use the installer and copy the shortcut from the desktop to the startup folder, .
 
 Here a screenshots:
 ![Screenshot 2024-04-20 150816](https://github.com/nekupaw/gemini-widows/assets/128070292/ffb99e8b-ee68-4ffb-bacf-48d704773dd2)
