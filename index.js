@@ -1,8 +1,5 @@
 const { app, Tray, Menu, shell, BrowserWindow, globalShortcut, screen, desktopCapturer} = require('electron');
 const path = require('path');
-const Store = require('electron-store');
-
-const store = new Store();
 
 let tray;
 let win;
@@ -17,25 +14,22 @@ if (isAlreadyRunning) {
 const createWindow = () => {
     const display = screen.getPrimaryDisplay();
 
-    const lastWinWidth = store.get('winWidth', 430);
-
     let width = display.bounds.width;
     let height = display.bounds.height;
 
     win = new BrowserWindow({
-        width: lastWinWidth,
+        width: 430,
         height: 800,
-        maxHeight: 800,
-        maxWidth: 430,
-        minHeight: 800,
-        minWidth: 400,
         show: false,
         frame: false,
         skipTaskbar: true,
         showInBackground: true,
-        x: width - 460,
+        x: width - 440,
         y: height -860,
         icon: icon,
+        maximizable: false,
+        resizable: false,
+        fullscreenable: false,
         webPreferences: {
             devTools: false
         }
@@ -44,10 +38,6 @@ const createWindow = () => {
     win.loadURL('https://gemini.google.com/app');
 
     Menu.setApplicationMenu(null)
-
-    win.on('close', () => {
-        store.set('winWidth', win.getBounds().width);
-    })
 
     win.webContents.on('did-finish-load', () => {
         loadPreScript();
