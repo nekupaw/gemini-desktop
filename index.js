@@ -1,4 +1,4 @@
-const { app, Tray, Menu, shell, BrowserWindow, globalShortcut, screen} = require('electron');
+const { app, Tray, Menu, shell, BrowserWindow, globalShortcut, screen, desktopCapturer} = require('electron');
 const path = require('path');
 const Store = require('electron-store');
 
@@ -77,9 +77,14 @@ app.whenReady().then(() => {
 
     createWindow();
 
-    globalShortcut.register('Control+g', () => {
+    globalShortcut.register('Ctrl+g', () => {
         if (win.isVisible()) win.hide();
         else win.show();
+    })
+
+    globalShortcut.register('Ctrl+Shift+g', () => {
+        if (!win.isVisible()) win.show();
+        win.webContents.executeJavaScript("document.querySelector('.speech_dictation_mic_button').click()");
     })
 });
 
@@ -87,17 +92,22 @@ function loadPreScript() {
     win.webContents.executeJavaScript(`
     const loginFrame = document.getElementsByClassName('gb_Ld')[0];
     const openWithText = document.createElement('span');
-    openWithText.textContent = 'open Gemini with [Ctrl] + [G]';
+    openWithText.textContent = "open Gemini with [Ctrl] + [G]";
     openWithText.style.cssText = 'font-family: "Google Sans","Helvetica Neue",sans-serif; font-size: 15px; opacity: 0; transition: 0.2s';
-    setTimeout(() => {
-    openWithText.style.opacity = 0.5;
-    }, 600);
+    setTimeout(() => {openWithText.style.opacity = 0.5;}, 600);
+    
+    const openMicText = document.createElement('span');
+    openMicText.textContent = 'activate mic with [Ctrl] + [Shift] + [G]';
+    openMicText.style.cssText = 'font-family: "Google Sans","Helvetica Neue",sans-serif; font-size: 15px; opacity: 0; transition: 0.2s';
+    setTimeout(() => {openMicText.style.opacity = 0.5;},700);
 
     if (!loginFrame) {
 
         const gmatCaption = document.querySelector('.gmat-caption');
+        const zeroStateWrapper = document.querySelector('.zero-state-wrapper');
         
-        document.querySelector('.zero-state-wrapper').appendChild(openWithText);
+        zeroStateWrapper.style.cssText = 'display: flex; flex-direction: column; gap: 10px;';
+        zeroStateWrapper.append(openWithText, openMicText);
         gmatCaption.textContent = 'Gemini Client for Windows by @nekupaw';
         gmatCaption.style.opacity = '0.5';
         const hello = document.querySelector('.bard-hello').textContent.split(' ');
