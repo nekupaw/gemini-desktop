@@ -11,4 +11,4 @@ With the shortcut Windows Key + G, Gemini can be opened from anywhere.
 tip: use the installer and copy the shortcut from the desktop to the startup folder, .
 
 Here a screenshots:
-![Screenshot 2024-04-20 150816](https://github.com/nekupaw/gemini-widows/assets/128070292/ffb99e8b-ee68-4ffb-bacf-48d704773dd2)
+![Screenshot 2024-04-27 005949](https://github.com/nekupaw/gemini-desktop/assets/128070292/be13d5ab-62e1-4f3d-b279-d38ca460bef5)
