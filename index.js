@@ -8,7 +8,7 @@ let tray;
 let win;
 let icon = path.join(__dirname, 'icon/google-gemini-icon.png');
 const accentColor = systemPreferences.getAccentColor().substring(0, 6);
-const backgroundColorAccent = generateColor(`#${accentColor}`, 0.3);
+const backgroundColorAccent = generateColor(`#${accentColor}`, 0.2);
 
 const isAlreadyRunning = app.requestSingleInstanceLock();
 
