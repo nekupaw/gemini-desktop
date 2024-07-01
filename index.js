@@ -1,14 +1,13 @@
-const { app, Tray, Menu, shell, BrowserWindow, globalShortcut, screen, systemPreferences } = require('electron');
-const path = require('path');
-const { generateColor } = require('./generateColor');
+const { app, Tray, Menu, shell, BrowserWindow, globalShortcut, screen, systemPreferences } = require('electron'),
+    path = require('path'),
+{ generateColor } = require('./generateColor');
 
-let tray;
-let win;
-const icon = path.join(__dirname, 'icon/google-gemini-icon.png');
-const accentColor = systemPreferences.getAccentColor().substring(0, 6);
-const backgroundColorAccent = generateColor(`#${accentColor}`, 0.2);
-
-const isAlreadyRunning = app.requestSingleInstanceLock();
+let tray,
+    win;
+const icon = path.join(__dirname, 'icon/google-gemini-icon.png'),
+    accentColor = systemPreferences.getAccentColor().substring(0, 6),
+    backgroundColorAccent = generateColor(`#${accentColor}`, 0.2),
+    isAlreadyRunning = app.requestSingleInstanceLock();
 
 if (!isAlreadyRunning) {
     app.quit();
