@@ -84,15 +84,15 @@ const preScript = `
     function a(a) {
         return document.querySelector('.' + a);
     }
-    const loginFrame = document.getElementsByClassName('gb_Ld')[0];
-    const addedTextStyle = {
-        marginTop: '10px',
-        fontFamily: 'Google Sans',
-        fontSize: '15px',
-        opacity: 0,
-        transition: 'opacity 0.4s',
-        pointerEvents: 'none'
-    };
+    const loginFrame = document.getElementsByClassName('gb_Ld')[0],
+        addedTextStyle = {
+            marginTop: '10px',
+            fontFamily: 'Google Sans',
+            fontSize: '15px',
+            opacity: 0,
+            transition: 'opacity 0.4s',
+            pointerEvents: 'none'
+        };
     const openWithText = document.createElement('span');
     openWithText.textContent = "open Gemini with [Ctrl] + [G]";
     Object.assign(openWithText.style, addedTextStyle);
@@ -101,13 +101,13 @@ const preScript = `
     Object.assign(openMicText.style, addedTextStyle);
 
     if (!loginFrame) {
-        const gmatCaption = document.querySelector('.gmat-caption');
-        const zeroStateWrapper = document.querySelector('.zero-state-wrapper');
+        const gmatCaption = document.querySelector('.gmat-caption'),
+            zeroStateWrapper = document.querySelector('.zero-state-wrapper');
         zeroStateWrapper.style.cssText = 'display: flex; flex-direction: column; gap: 10px;';
         zeroStateWrapper.append(openWithText, openMicText);
         gmatCaption.textContent = 'Gemini Client for Windows by @nekupaw';
-        const hello = document.querySelector('.bard-hello').textContent.split(' ');
-        const greetings = ['heyaa', 'hewuu', 'hiii', 'ayy'];
+        const hello = document.querySelector('.bard-hello').textContent.split(' '),
+            greetings = ['heyaa', 'hewuu', 'hiii', 'ayy'];
         hello[0] = greetings[Math.floor(Math.random() * greetings.length)];
         document.querySelector('.bard-hello').textContent = hello.join(' ');
         document.querySelector('.bard-hello').style.pointerEvents = 'none';
