@@ -1,5 +1,5 @@
 {
-  "name": "gemini-windows",
+  "name": "gemini-desktop",
   "version": "1.0.0",
   "description": "an open source Google Gemini Client in electron for Windows",
   "main": "index.js",
