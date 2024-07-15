@@ -9,9 +9,8 @@ const icon = path.join(__dirname, 'icon/google-gemini-icon.png'),
     backgroundColorAccent = generateColor(`#${accentColor}`, 0.2),
     isAlreadyRunning = app.requestSingleInstanceLock();
 
-if (!isAlreadyRunning) {
-    app.quit();
-} else {
+if (!isAlreadyRunning) app.quit();
+else {
     app.on('second-instance', () => {
         if (win) {
             if (win.isMinimized()) win.restore();
