@@ -9,8 +9,8 @@ function exec(code) {
     gemini.webContents.executeJavaScript(code).catch(console.error);
 }
 
-function getValue(val) {
-    return store.get(val, true);
+function getValue(a) {
+    return store.get(a, true);
 }
 
 function optimizePage() {
@@ -37,10 +37,10 @@ function optimizePage() {
         get('.gmat-caption').style.opacity = "0.5";
 
         const checkBox = cb('input', null, null, null, "type", "checkbox");
-        window.electron.getLocalStorage('get-always-on-top').then(value => {
+        window.electron.getLocalStorage('always-on-top').then(value => {
             checkBox.checked = value;
         });
-        checkBox.onchange = (event) => window.electron.setLocalStorage('set-always-on-top', event.target.checked);
+        checkBox.onchange = (event) => window.electron.setLocalStorage("always-on-top", event.target.checked);
 
         const containerA = cb('div', null, 'containerA', [
             cb("p", "open Gemini from anywhere with [CTRL + G]"), 
@@ -69,7 +69,7 @@ const createWindow = () => {
         alwaysOnTop: true,
         x: width - winWidth - 10, y: height - winHeight - 50,
         icon: path.resolve(__dirname, 'icon.png'),
-        webPreferences: { contextIsolation: true, devTools: true, preload: path.resolve(__dirname, 'preload.js') }
+        webPreferences: { contextIsolation: true, devTools: true, preload: path.join(__dirname, 'preload.js'), nodeIntegration: false,}
     });
 
     gemini.loadURL('https://gemini.google.com/app').catch(console.error);
@@ -77,17 +77,16 @@ const createWindow = () => {
     gemini.webContents.on('did-finish-load', optimizePage);
     gemini.webContents.on('did-navigate', optimizePage);
 
-    ipcMain.handle('get-always-on-top', () => {
-        return getValue('alwaysOnTop');
+    ipcMain.handle('get-local-storage', (event, a) => {
+        return getValue(a);
     });
 
-    ipcMain.on('set-always-on-top', (event, value) => {
-        store.set('alwaysOnTop', value);
-        gemini.setAlwaysOnTop(value); // Setze den Wert für das Fenster
+    ipcMain.on('set-local-storage', (event, a, b) => {
+        store.set(a, b);
     });
 
     gemini.on('blur', () => {
-        if (getValue('alwaysOnTop')) gemini.hide();
+        if (!getValue('always-on-top')) gemini.hide();
     });
 };
 

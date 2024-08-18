@@ -1,6 +1,6 @@
 const { contextBridge, ipcRenderer } = require('electron');
 
 contextBridge.exposeInMainWorld('electron', {
-    getLocalStorage: (key) => ipcRenderer.invoke('get-local-storage', key),
-    setLocalStorage: (key, value) => ipcRenderer.send('set-local-storage', key, value)
+    getLocalStorage: (a) => ipcRenderer.invoke('get-local-storage', a),
+    setLocalStorage: (a, b) => ipcRenderer.send('set-local-storage', a, b)
 });
