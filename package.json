@@ -22,7 +22,7 @@
     },
     "win": {
       "target": "nsis",
-      "icon":  "icon/google-gemini-icon.png"
+      "icon": "icon.png"
     }
   },
   "dependencies": {
