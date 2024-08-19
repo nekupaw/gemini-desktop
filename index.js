@@ -32,7 +32,7 @@ const createWindow = () => {
         alwaysOnTop: true,
         x: width - winWidth - 10, y: height - winHeight - 50,
         icon: path.resolve(__dirname, 'icon.png'),
-        webPreferences: { contextIsolation: true, devTools: true, preload: path.join(__dirname, 'preload.js'), nodeIntegration: false,}
+        webPreferences: { contextIsolation: true, devTools: false, preload: path.join(__dirname, 'preload.js'), nodeIntegration: false,}
     });
 
     gemini.loadURL('https://gemini.google.com/app').catch(console.error);
