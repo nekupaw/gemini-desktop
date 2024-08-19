@@ -1,7 +1,7 @@
-const { app, Tray, Menu, shell, BrowserWindow, globalShortcut, screen, ipcMain } = require('electron');
-const path = require('path');
-const Store = require('electron-store');
-const store = new Store();
+const { app, Tray, Menu, shell, BrowserWindow, globalShortcut, screen, ipcMain } = require('electron'),
+path = require('path'),
+Store = require('electron-store'),
+store = new Store();
 
 let tray, gemini;
 
