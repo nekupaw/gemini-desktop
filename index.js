@@ -1,7 +1,7 @@
 const { app, Tray, Menu, shell, BrowserWindow, globalShortcut, screen, ipcMain } = require('electron'),
-path = require('path'),
-Store = require('electron-store'),
-store = new Store();
+    path = require('path'),
+    Store = require('electron-store'),
+    store = new Store();
 
 let tray, gemini;
 
@@ -20,8 +20,8 @@ function get(e){return document.querySelector(e)}function cb(e,t,n,o,a,i){let c=
 }
 
 const createWindow = () => {
-    const { width, height } = screen.getPrimaryDisplay().bounds;
-    const winWidth = 400, winHeight = 700;
+    const { width, height } = screen.getPrimaryDisplay().bounds,
+        winWidth = 400, winHeight = 700;
 
     gemini = new BrowserWindow({
         width: winWidth, height: winHeight,
@@ -32,7 +32,7 @@ const createWindow = () => {
         alwaysOnTop: true,
         x: width - winWidth - 10, y: height - winHeight - 50,
         icon: path.resolve(__dirname, 'icon.png'),
-        webPreferences: { contextIsolation: true, devTools: false, preload: path.join(__dirname, 'preload.js'), nodeIntegration: false,}
+        webPreferences: { contextIsolation: true, devTools: true, preload: path.join(__dirname, 'preload.js'), nodeIntegration: false,}
     });
 
     gemini.loadURL('https://gemini.google.com/app').catch(console.error);
@@ -64,6 +64,12 @@ app.whenReady().then(() => {
             label: 'About (GitHub)',
             click: () => shell.openExternal('https://github.com/nekupaw/gemini-desktop').catch(console.error)
         }
+        // {
+        //     label: 'always on top',
+        //     type: "checkbox",
+        //     checked: getValue('always-on-top'),
+        //     click: (a) => store.set('always-on-top', a.checked)
+        // }
     ]);
     tray.setContextMenu(contextMenu);
     tray.on('click', () => gemini.show());
