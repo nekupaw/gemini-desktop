@@ -1,0 +1,101 @@
+* {
+    background: none;
+    outline: none;
+    border: none;
+    margin: 0;
+    padding: 0;
+    font-family: "Segoe UI", sans-serif;
+    color: white;
+    transition: .2s ease;
+}
+
+html {
+    background: #2b2b2b;
+    user-select: none;
+}
+
+
+body {
+    display: flex;
+    height: 100dvh;
+    width: 100%;
+    flex-direction: column;
+    gap: 50px;
+    padding: 30px;
+    box-sizing: border-box;
+}
+
+
+.shortcut-container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    gap: 20px;
+
+    .shortcut{
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        .btn{
+            height: 50px;
+            border-radius: 5px;
+            background: #545454;
+            width: 50%;
+            display: grid;
+            place-items: center;
+            font-size: 17px;
+        }
+        .btn:hover{
+            background: #5d5d5d;
+        }
+
+        .name{
+            font-size: 20px;
+        }
+    }
+}
+
+.headline {
+    font-size: 25px;
+}
+
+.btn-container {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    background: #202020;
+    align-items: center;
+    justify-content: center;
+    display: flex;
+    padding: 30px;
+    box-sizing: border-box;
+    width: 100%;
+    gap: 20px;
+
+    button.done {
+        background: #4cc2ff;
+        color: black;
+    }
+
+    button.done:hover {
+        filter: brightness(.9);
+    }
+
+    button.cancel {
+        background: #2d2d2d;
+    }
+
+    button.cancel:hover {
+        background: #323232;
+    }
+
+    button {
+        height: 40px;
+        width: 100%;
+        border-radius: 5px;
+        font-size: 15px;
+    }
+}
