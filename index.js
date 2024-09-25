@@ -1,16 +1,19 @@
-const {app, Tray, Menu, shell, BrowserWindow, globalShortcut, screen, ipcMain} = require('electron');
-const path = require('path');
-const Store = require('electron-store');
-const store = new Store();
+const {app, Tray, Menu, shell, BrowserWindow, globalShortcut, screen, ipcMain} = require('electron'),
+      path = require('path'),
+      Store = require('electron-store'),
+      store = new Store();
 
-let tray, gemini, visible = true;
+let tray, gemini, closeTimeout, visible = true;
 
 const exec = code => gemini.webContents.executeJavaScript(code).catch(console.error),
     getValue = key => store.get(key, false);
 
 const toggleVisibility = action => {
     visible = action;
-    action ? gemini.show() : setTimeout(() => gemini.hide(), 400);
+    if (action){
+        clearTimeout(closeTimeout);
+        gemini.show();
+    } else closeTimeout = setTimeout(() => gemini.hide(), 400);
     gemini.webContents.send('toggle-visibility', action);
 };
 
@@ -26,7 +29,7 @@ const registerKeybindings = () => {
     if (shortcutB) {
         globalShortcut.register(shortcutB, () => {
             toggleVisibility(true);
-            exec("document.querySelector('.speech_dictation_mic_button').click()");
+            gemini.webContents.send('activate-mic');
         });
     }
 };
@@ -45,7 +48,7 @@ const createWindow = () => {
         alwaysOnTop: true,
         transparent: true,
         x: width - winWidth - 10,
-        y: height - winHeight - 50,
+        y: height - winHeight - 60,
         icon: path.resolve(__dirname, 'icon.png'),
         webPreferences: {
             contextIsolation: true,
@@ -59,7 +62,7 @@ const createWindow = () => {
     gemini.loadFile('src/index.html').catch(console.error);
 
     gemini.on('blur', () => {
-        if (!getValue('always-on-top')) toggleVisibility(true);
+        if (!getValue('always-on-top')) toggleVisibility(false);
     });
 
     ipcMain.handle('get-local-storage', (event, key) => getValue(key));

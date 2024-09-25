@@ -4,12 +4,20 @@
     transition: .4s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-webview{
-    height: 100dvh;
-    width: 100%;
-    position: fixed;
+body{
+    overflow: hidden;
 }
 
-webview.close{
+.view{
+    border-radius: 10px;
+    overflow: hidden;
+    height: 100dvh; width: 100%;
+
+    webview{
+        height: 100%; width: 100%;
+    }
+}
+
+.view.close{
     transform: translateX(100%);
 }
