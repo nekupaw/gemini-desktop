@@ -3,73 +3,37 @@ const path = require('path');
 const Store = require('electron-store');
 const store = new Store();
 
-let tray, gemini;
+let tray, gemini, visible = true;
 
-function exec(code) {
-    gemini.webContents.executeJavaScript(code).catch(console.error);
-}
+const exec = code => gemini.webContents.executeJavaScript(code).catch(console.error),
+    getValue = key => store.get(key, false);
 
-function getValue(key) {
-    return store.get(key, false);
-}
+const toggleVisibility = action => {
+    visible = action;
+    action ? gemini.show() : setTimeout(() => gemini.hide(), 400);
+    gemini.webContents.send('toggle-visibility', action);
+};
 
-function registerKeybindings() {
+const registerKeybindings = () => {
     globalShortcut.unregisterAll();
-
     const shortcutA = getValue('shortcutA'),
-          shortcutB = getValue('shortcutB');
+        shortcutB = getValue('shortcutB');
 
     if (shortcutA) {
-        globalShortcut.register(shortcutA, () => {
-            gemini.isVisible() ? gemini.hide() : gemini.show();
-        });
+        globalShortcut.register(shortcutA, () => toggleVisibility(!visible));
     }
 
     if (shortcutB) {
         globalShortcut.register(shortcutB, () => {
-            if (!gemini.isVisible()) gemini.show();
+            toggleVisibility(true);
             exec("document.querySelector('.speech_dictation_mic_button').click()");
         });
     }
-}
+};
 
-function optimizePage() {
-    exec(`
-        function createElement(tag, text = '', className = '', children = [], attribute = '', value = '') {
-            const el = document.createElement(tag);
-            if (text) el.textContent = text;
-            if (className) el.className = className;
-            if (attribute) el.setAttribute(attribute, value);
-            children.forEach(child => el.appendChild(child));
-            return el;
-        }
-
-        const style = document.createElement("style");
-        style.textContent = ".containerA { margin-top: 30px; display: flex; flex-direction: column; gap: 10px; } .containerA p { font-family: 'Google Sans', 'Helvetica Neue', sans-serif; opacity: 0.2; margin: 0; }";
-        document.head.appendChild(style);
-
-        document.querySelector(".prompt-suggestion-cards-container")?.remove();
-        const caption = document.querySelector(".gmat-caption");
-        if (caption) {
-            caption.textContent = "Gemini Client by @nekupaw";
-            caption.style.opacity = "0.5";
-        }
-
-        const zeroStateWrapper = document.querySelector(".zero-state-wrapper");
-        if (zeroStateWrapper) {
-            zeroStateWrapper.appendChild(
-                createElement("div", "", "containerA", [
-                    createElement("p", "Open Gemini from anywhere with [CTRL + G]"),
-                    createElement("p", "Talk to Gemini with [CTRL + Shift + G]")
-                ])
-            );
-        }
-    `);
-}
-
-function createWindow() {
-    const {width, height} = screen.getPrimaryDisplay().bounds;
-    const winWidth = 400, winHeight = 700;
+const createWindow = () => {
+    const {width, height} = screen.getPrimaryDisplay().bounds,
+        winWidth = 400, winHeight = 700;
 
     gemini = new BrowserWindow({
         width: winWidth,
@@ -79,42 +43,43 @@ function createWindow() {
         resizable: false,
         skipTaskbar: true,
         alwaysOnTop: true,
+        transparent: true,
         x: width - winWidth - 10,
         y: height - winHeight - 50,
         icon: path.resolve(__dirname, 'icon.png'),
-        webPreferences: { contextIsolation: true, devTools: true, nodeIntegration: false }
+        webPreferences: {
+            contextIsolation: true,
+            devTools: true,
+            nodeIntegration: false,
+            webviewTag: true,
+            preload: path.join(__dirname, 'src/preload.js')
+        }
     });
 
-    gemini.loadURL('https://gemini.google.com/app').catch(console.error);
-
-    gemini.webContents.on('did-finish-load', optimizePage);
-    gemini.webContents.on('did-navigate', optimizePage);
+    gemini.loadFile('src/index.html').catch(console.error);
 
     gemini.on('blur', () => {
-        if (!getValue('always-on-top')) gemini.hide();
+        if (!getValue('always-on-top')) toggleVisibility(true);
     });
 
     ipcMain.handle('get-local-storage', (event, key) => getValue(key));
-
     ipcMain.on('set-local-storage', (event, key, value) => {
         store.set(key, value);
         registerKeybindings();
     });
-
-    ipcMain.on('close', (event) => {
+    ipcMain.on('close', event => {
         BrowserWindow.fromWebContents(event.sender).close();
     });
-}
+};
 
-function createTray() {
+const createTray = () => {
     tray = new Tray(path.resolve(__dirname, 'icon.png'));
-
     const contextMenu = Menu.buildFromTemplate([
         {
             label: 'About (GitHub)',
             click: () => shell.openExternal('https://github.com/nekupaw/gemini-desktop').catch(console.error)
         },
-        { type: 'separator' },
+        {type: 'separator'},
         {
             label: "Set Keybindings",
             click: () => {
@@ -126,7 +91,8 @@ function createTray() {
                     resizable: false,
                     skipTaskbar: true,
                     webPreferences: {
-                        contextIsolation: true, preload: path.join(__dirname, 'components/setKeybindingsOverlay/preload.js')
+                        contextIsolation: true,
+                        preload: path.join(__dirname, 'components/setKeybindingsOverlay/preload.js')
                     }
                 });
                 dialog.loadFile('components/setKeybindingsOverlay/index.html').catch(console.error);
@@ -137,9 +103,9 @@ function createTray() {
             label: 'Always on Top',
             type: 'checkbox',
             checked: getValue('always-on-top'),
-            click: (menuItem) => store.set('always-on-top', menuItem.checked)
+            click: menuItem => store.set('always-on-top', menuItem.checked)
         },
-        { type: 'separator' },
+        {type: 'separator'},
         {
             label: 'Quit Gemini',
             click: () => gemini.close()
@@ -147,8 +113,8 @@ function createTray() {
     ]);
 
     tray.setContextMenu(contextMenu);
-    tray.on('click', () => gemini.show());
-}
+    tray.on('click', () => toggleVisibility(true));
+};
 
 app.whenReady().then(() => {
     createTray();

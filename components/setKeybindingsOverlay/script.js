@@ -1,35 +1,42 @@
 const shortcutObjs = document.querySelectorAll('.btn');
-shortcutObjs[0].innerText = window.electron.getLocalStorage('shortcutA');
-shortcutObjs[1].innerText = window.electron.getLocalStorage('shortcutB');
+
+const register = (btn) => {
+    let shortcut = [];
+
+    document.addEventListener('keydown', e => shortcut.push(e.key));
+    document.addEventListener('keyup', e => {
+        if (e.keyCode !== 8){
+            btn.target.innerText = format(shortcut.splice(0, 3));
+        } else btn.target.innerText = "";
+        shortcut.length = 0;
+    }, { once: true });
+}
 
 function format(array) {
     return array.join(' + ').toLowerCase();
 }
 
+async function main(){
+    shortcutObjs[0].innerText = await window.electron.getLocalStorage('shortcutA');
+    shortcutObjs[1].innerText = await window.electron.getLocalStorage('shortcutB');
 
-const register = a => {
-    let shortcut = [];
+    shortcutObjs.forEach(btn => {
+        btn.onclick = (event) => {
+            btn.innerText = "enter keybinding";
+            register(event);
+        }
+    });
 
-    document.addEventListener('keydown', e => shortcut.push(e.key));
-    document.addEventListener('keyup', e => {
-        a.target.innerText = format(shortcut.splice(0, 3));
-    }, {once: true})
-}
-
-shortcutObjs.forEach(a => {
-    a.onclick = (a) => {
-        a.target.innerText = "enter keybinding"
-        register(a);
+    document.querySelector('.done').onclick = () => {
+        window.electron.setLocalStorage('shortcutA', shortcutObjs[0].innerText);
+        window.electron.setLocalStorage('shortcutB', shortcutObjs[1].innerText);
+        window.electron.close();
     }
-})
 
+    document.querySelector('.cancel').onclick = () => {
+        window.electron.close();
+    }
 
-document.querySelector('.done').onclick = () => {
-    window.electron.setLocalStorage('shortcutA', shortcutObjs[0]);
-    window.electron.setLocalStorage('shortcutB', shortcutObjs[1]);
-    window.electron.close();
 }
 
-document.querySelector('.cancel').onclick = () => {
-    window.electron.close();
-}
+main();
