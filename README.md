@@ -13,6 +13,6 @@ With the shortcut Ctrl + G, Gemini can be opened from anywhere.
 tip: use the installer and copy the shortcut from the desktop to the startup folder.
 
 Here a screenshot:
-![image](https://github.com/user-attachments/assets/854320a0-7c6f-4e39-ba92-7f11dbdb63ec)
+![image](https://github.com/nekupaw/gemini-desktop/releases/download/1.0.6/Gemini-Desktop.Setup.1.0.6.exe)
 
 
