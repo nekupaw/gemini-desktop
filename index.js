@@ -42,6 +42,7 @@ const createWindow = () => {
         width: winWidth,
         height: winHeight,
         frame: false,
+        movable: true,
         maximizable: false,
         resizable: false,
         skipTaskbar: true,
