@@ -6,7 +6,7 @@ const {app, Tray, Menu, shell, BrowserWindow, globalShortcut, screen, ipcMain} =
 let tray, gemini, closeTimeout, visible = true;
 
 const exec = code => gemini.webContents.executeJavaScript(code).catch(console.error),
-    getValue = key => store.get(key, false);
+    getValue = (key, defaultVal = false) => store.get(key, defaultVal);
 
 const toggleVisibility = action => {
     visible = action;
@@ -51,6 +51,7 @@ const createWindow = () => {
         x: width - winWidth - 10,
         y: height - winHeight - 60,
         icon: path.resolve(__dirname, 'icon.png'),
+        show: getValue('show-on-startup', true),
         webPreferences: {
             contextIsolation: true,
             devTools: true,
@@ -63,17 +64,20 @@ const createWindow = () => {
     gemini.loadFile('src/index.html').catch(console.error);
 
     gemini.on('blur', () => {
-        if (!getValue('always-on-top')) toggleVisibility(false);
+        if (!getValue('always-on-top', false)) toggleVisibility(false);
     });
 
     ipcMain.handle('get-local-storage', (event, key) => getValue(key));
+
     ipcMain.on('set-local-storage', (event, key, value) => {
         store.set(key, value);
         registerKeybindings();
     });
+
     ipcMain.on('close', event => {
         BrowserWindow.fromWebContents(event.sender).close();
     });
+
 };
 
 const createTray = () => {
@@ -106,8 +110,14 @@ const createTray = () => {
         {
             label: 'Always on Top',
             type: 'checkbox',
-            checked: getValue('always-on-top'),
+            checked: getValue('always-on-top', false),
             click: menuItem => store.set('always-on-top', menuItem.checked)
+        },
+        {
+            label: 'Show on Startup',
+            type: 'checkbox',
+            checked: getValue('show-on-startup', true),
+            click: menuItem => store.set('show-on-startup', menuItem.checked)
         },
         {type: 'separator'},
         {
